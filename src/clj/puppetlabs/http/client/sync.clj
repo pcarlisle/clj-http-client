@@ -6,7 +6,8 @@
             [schema.core :as schema]
             [puppetlabs.http.client.common :as common]
             [puppetlabs.http.client.metrics :as metrics])
-  (:refer-clojure :exclude (get)))
+  (:refer-clojure :exclude (get))
+  (:import java.util.concurrent.ExecutionException))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Private utility functions
@@ -32,7 +33,7 @@
    (let [{:keys [error] :as resp} @(async/request-with-client
                                     req nil client metric-registry metric-namespace)]
      (if error
-       (throw error)
+       (throw (java.util.concurrent.ExecutionException. error))
        resp))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Public
